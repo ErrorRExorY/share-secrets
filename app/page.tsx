@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import styles from './Home.module.css';
 
 export default function Home() {
@@ -9,7 +11,7 @@ export default function Home() {
   const [password, setPassword] = useState('');
   const [expiry, setExpiry] = useState('');
   const [link, setLink] = useState('');
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -69,6 +71,16 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <Header />
+      <header className={styles.header}>
+        <h1>Einmal-Nachrichten-System</h1>
+        <p>Erstellen Sie eine Nachricht, die nach einmaligem Lesen zerstört wird.</p>
+        <p>Optionen:</p>
+        <ul>
+          <li>Passwortschutz für zusätzliche Sicherheit</li>
+          <li>Ablaufzeit für zeitlich begrenzte Nachrichten</li>
+        </ul>
+      </header>
       <form className={styles.form} onSubmit={handleSubmit}>
         <textarea
           className={styles.textarea}
@@ -98,6 +110,7 @@ export default function Home() {
           <a className={styles.link} href={link}>{link}</a>
         </div>
       )}
+      
     </div>
   );
 }

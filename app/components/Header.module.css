@@ -1,0 +1,26 @@
+.header {
+	width: 100%;
+	background-color: #1e1e1e;
+	padding: 10px 0;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	position: fixed;
+	top: 0;
+	z-index: 1000;
+  }
+  
+  .nav {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+  }
+  
+  .navItem {
+	color: #e0e0e0;
+	text-decoration: none;
+	font-size: 1rem;
+  }
+  
+  .navItem:hover {
+	color: #1e88e5;
+  }
+  
