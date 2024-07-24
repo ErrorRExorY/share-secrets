@@ -44,9 +44,9 @@ ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 
 3. Erstelle die Datei `.env` im Stammverzeichnis des Projekts und füge die erforderlichen Umgebungsvariablen hinzu:
     ```env
-    VAULT_ADDR=https://your-vault-server.com
-    VAULT_TOKEN=s.yourVaultToken
-    ENCRYPTION_KEY=your32characterlongencryptionkey
+    VAULT_ADDR="https://your-vault-server.com"
+    VAULT_TOKEN="s.yourVaultToken"
+    ENCRYPTION_KEY="your32characterlongencryptionkey"
     ```
 
 4. Starte die Entwicklungsversion der App:
