@@ -9,6 +9,12 @@ Dies ist eine One Time Read Message Website, die es Benutzern ermöglicht, einma
 - Optionale Ablaufzeit für Nachrichten
 - Integration mit Vault zur sicheren Speicherung der Nachrichten
 
+## Tech Stack
+
+- [Next.js 14.2](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
 ## Voraussetzungen
 
 - [Node.js](https://nodejs.org/) (Version 14 oder höher)
@@ -17,10 +23,10 @@ Dies ist eine One Time Read Message Website, die es Benutzern ermöglicht, einma
 - Ein Vault-Token mit den erforderlichen Berechtigungen, um Geheimnisse zu erstellen und zu löschen
 - Eine Datei `.env` im Stammverzeichnis des Projekts mit den folgenden Umgebungsvariablen:
 
-```
-VAULT_ADDR=<URL zu deinem Vault-Server>
-VAULT_TOKEN=<Dein Vault-Token>
-ENCRYPTION_KEY=<32 Zeichen langer Schlüssel für AES-256>
+```env
+VAULT_ADDR="<URL zu deinem Vault-Server>"
+VAULT_TOKEN="<Dein Vault-Token>"
+ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 ```
 
 ## Installation
@@ -63,6 +69,11 @@ ENCRYPTION_KEY=<32 Zeichen langer Schlüssel für AES-256>
 │   ├── page.tsx
 │   ├── globals.css
 │   └── layout.tsx
+├── components
+│   ├── Header.tsx
+│   ├── Header.module.css
+│   ├── Footer.tsx
+│   └── Footer.module.css
 ├── public
 │   └── favicon.ico
 ├── styles
@@ -125,6 +136,23 @@ Ruft eine Nachricht ab.
 ## Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe die [LICENSE](LICENSE) Datei für Details.
-```
 
-Diese README-Datei bietet eine umfassende Erklärung des Projekts, einschließlich der Installation, Konfiguration und Nutzung der verschiedenen API-Endpunkte. Es deckt auch die Sicherheitsaspekte ab und enthält grundlegende Informationen zur Verzeichnisstruktur und Lizenzierung.
+## Entwicklung
+
+Dieses Projekt wurde mit [npx create-next-app@latest](https://nextjs.org/docs/api-reference/create-next-app) erstellt und verwendet Next.js, TypeScript und Tailwind CSS.
+
+### Weitere Informationen
+
+- [Next.js-Dokumentation](https://nextjs.org/docs)
+- [TypeScript-Dokumentation](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS-Dokumentation](https://tailwindcss.com/docs)
+
+### Skripte
+
+- `npm run dev` - Startet die Entwicklungsumgebung
+- `npm run build` - Baut das Projekt für die Produktion
+- `npm start` - Startet die Produktionsversion der App
+
+### Anpassen von Tailwind CSS
+
+Um Tailwind CSS anzupassen, bearbeite die Datei `tailwind.config.js` im Stammverzeichnis des Projekts. Weitere Informationen zur Konfiguration von Tailwind CSS findest du in der [Tailwind CSS-Dokumentation](https://tailwindcss.com/docs/configuration).
