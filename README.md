@@ -33,8 +33,8 @@ ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 
 1. Klone das Repository:
     ```sh
-    git clone https://github.com/dein-benutzername/dein-repository.git
-    cd dein-repository
+    git clone https://github.com/ErrorRExorY/share-secrets.git
+    cd share-secrets
     ```
 
 2. Installiere die Abhängigkeiten:
