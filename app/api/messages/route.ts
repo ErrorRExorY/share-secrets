@@ -32,19 +32,31 @@ export async function POST(request: NextRequest) {
   const encryptedPassword = password ? encrypt(password) : null;
 
   const messageId = uuidv4();
-  const secretPath = `secret/data/messages/${messageId}`;
-  const secretData = {
+  const messagePath = `secret/data/messages/${messageId}`;
+  const passwordPath = `secret/data/passwords/${messageId}`;
+  
+  const messageData = {
     data: {
       content: encryptedContent,
+    },
+  };
+
+  const passwordData = {
+    data: {
       password: encryptedPassword,
       expiry: expiry ? new Date(expiry).toISOString() : null,
     },
   };
 
   try {
-    await axios.post(`${VAULT_ADDR}/v1/${secretPath}`, secretData, {
+    await axios.post(`${VAULT_ADDR}/v1/${messagePath}`, messageData, {
       headers: { 'X-Vault-Token': VAULT_TOKEN },
     });
+
+    await axios.post(`${VAULT_ADDR}/v1/${passwordPath}`, passwordData, {
+      headers: { 'X-Vault-Token': VAULT_TOKEN },
+    });
+
     return NextResponse.json({ id: messageId });
   } catch (error) {
     return NextResponse.json({ error: 'Fehler beim Speichern der Nachricht' }, { status: 500 });
@@ -59,14 +71,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'ID ist erforderlich' }, { status: 400 });
   }
 
-  const secretPath = `secret/data/messages/${messageId}`;
+  const messagePath = `secret/data/messages/${messageId}`;
+  const passwordPath = `secret/data/passwords/${messageId}`;
 
   try {
-    const response = await axios.get(`${VAULT_ADDR}/v1/${secretPath}`, {
+    const messageResponse = await axios.get(`${VAULT_ADDR}/v1/${messagePath}`, {
       headers: { 'X-Vault-Token': VAULT_TOKEN },
     });
 
-    const { content, password: storedPassword, expiry } = response.data.data.data;
+    const passwordResponse = await axios.get(`${VAULT_ADDR}/v1/${passwordPath}`, {
+      headers: { 'X-Vault-Token': VAULT_TOKEN },
+    });
+
+    const { content } = messageResponse.data.data.data;
+    const { password: storedPassword, expiry } = passwordResponse.data.data.data;
 
     if (expiry && new Date() > new Date(expiry)) {
       return NextResponse.json({ error: 'Nachricht abgelaufen' }, { status: 410 });
@@ -78,7 +96,11 @@ export async function GET(request: NextRequest) {
 
     const message = decrypt(content);
 
-    await axios.delete(`${VAULT_ADDR}/v1/${secretPath}`, {
+    await axios.delete(`${VAULT_ADDR}/v1/${messagePath}`, {
+      headers: { 'X-Vault-Token': VAULT_TOKEN },
+    });
+
+    await axios.delete(`${VAULT_ADDR}/v1/${passwordPath}`, {
       headers: { 'X-Vault-Token': VAULT_TOKEN },
     });
 

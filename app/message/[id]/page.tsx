@@ -1,7 +1,10 @@
+// app/message/[id]/page.tsx
 'use client';
 
 import { useState } from 'react';
-import styles from './MessagePage.module.css';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import homeStyles from '../../Home.module.css';
 
 export default function MessagePage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -9,20 +12,28 @@ export default function MessagePage({ params }: { params: { id: string } }) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
+  const [retry, setRetry] = useState(false);
 
   const handleConfirm = async () => {
     try {
+      // Reset error before new request
+      setError(null);
+
       const response = await fetch(`/api/messages?id=${id}&password=${password}`);
       const data = await response.json();
+
       if (data.error) {
         setError(data.error);
         setMessage(null);
+        setRetry(true); // Allow retry
       } else {
         setMessage(data.content);
         setShowConfirmation(false);
+        setRetry(false); // Disable retry after successful fetch
       }
     } catch {
       setError('Fehler beim Abrufen der Nachricht.');
+      setRetry(true); // Allow retry on error
     }
   };
 
@@ -31,28 +42,46 @@ export default function MessagePage({ params }: { params: { id: string } }) {
     setShowConfirmation(false);
   };
 
+  const handleRetry = () => {
+    setRetry(false);
+    setPassword('');
+    setError(null);
+  };
+
   return (
-    <div className={styles.container}>
+    <div className={homeStyles.container}>
+      <Header />
+      <div className={homeStyles.header}>
+        <h1>Einmal-Nachrichten-System</h1>
+        <p>Lesen Sie eine Nachricht, die nach einmaligem Lesen zerstört wird.</p>
+      </div>
       {showConfirmation ? (
-        <div>
-          <p className={styles.header}>Wollen Sie die Nachricht lesen?</p>
+        <div className={homeStyles.form}>
+          <p className={homeStyles.header}>Wollen Sie die Nachricht lesen?</p>
           <input
-            className={styles.input}
+            className={homeStyles.input}
             type="password"
             placeholder="Passwort eingeben"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div className={styles.buttonContainer}>
-            <button className={styles.button} onClick={handleConfirm}>Ja</button>
-            <button className={styles.button} onClick={handleDecline}>Nein</button>
+          <div className={homeStyles.buttonContainer}>
+            <button className={homeStyles.button} onClick={handleConfirm}>Ja</button>
+            <button className={homeStyles.button} onClick={handleDecline}>Nein</button>
           </div>
+          {retry && (
+            <div className={homeStyles.retryContainer}>
+              <button className={homeStyles.retryButton} onClick={handleRetry}>Erneut versuchen</button>
+            </div>
+          )}
+          {error && <p className={homeStyles.error}>{error}</p>}
         </div>
       ) : (
-        <div>
-          {error ? <p className={styles.error}>{error}</p> : <p className={styles.message}>{message}</p>}
+        <div className={homeStyles.form}>
+          {error ? <p className={homeStyles.error}>{error}</p> : <p className={homeStyles.message}>{message}</p>}
         </div>
       )}
+      <Footer />
     </div>
   );
 }
