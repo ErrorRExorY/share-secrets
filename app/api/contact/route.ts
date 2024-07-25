@@ -1,7 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// In-memory store for rate limiting
+const rateLimitStore = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 1; // max 5 requests per window per IP
+
+function getClientIp(request: NextRequest) {
+  return request.headers.get('x-forwarded-for') || request.ip || 'unknown';
+}
+
 export async function POST(request: NextRequest) {
+  const clientIp = getClientIp(request);
+  const now = Date.now();
+
+  // Initialize rate limit data if not present
+  if (!rateLimitStore.has(clientIp)) {
+    rateLimitStore.set(clientIp, { count: 0, startTime: now });
+  }
+
+  const rateLimitData = rateLimitStore.get(clientIp);
+
+  // Reset count if window has passed
+  if (now - rateLimitData.startTime > RATE_LIMIT_WINDOW) {
+    rateLimitData.count = 0;
+    rateLimitData.startTime = now;
+  }
+
+  // Increment request count
+  rateLimitData.count += 1;
+
+  // Check if rate limit exceeded
+  if (rateLimitData.count > RATE_LIMIT_MAX_REQUESTS) {
+    return NextResponse.json(
+      { error: 'Zu viele Anfragen. Bitte versuchen Sie es später erneut.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const { name, email, message } = await request.json();
 

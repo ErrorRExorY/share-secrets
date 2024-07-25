@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../Home.module.css';
@@ -23,6 +24,9 @@ export default function ContactPage() {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Zu viele Anfragen. Bitte versuchen Sie es später erneut.');
+        }
         throw new Error('Fehler beim Senden der Nachricht');
       }
 
@@ -40,7 +44,11 @@ export default function ContactPage() {
       setEmail('');
       setMessage('');
     } catch (error) {
-      toast.error('Fehler beim Senden der Nachricht.', {
+      let errorMessage = 'Ein unbekannter Fehler ist aufgetreten';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
