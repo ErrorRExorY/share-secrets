@@ -3,6 +3,9 @@
  */
 const nextConfig = {
 	// output: 'export',
+	env: {
+        PUBLIC_URL: 'https://msg.whywaitservices.de'
+    },
    
 	// Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
 	// trailingSlash: true,

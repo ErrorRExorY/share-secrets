@@ -124,7 +124,7 @@ export default function Home() {
       {link && (
         <div className={styles.linkContainer}>
           <p>Einmaliger Link:</p>
-          <a className={styles.link} href={link}>{link}</a>
+          <a className={styles.link} href={link} target="_blank" rel="noopener noreferrer">{link}</a>
         </div>
       )}
     </div>

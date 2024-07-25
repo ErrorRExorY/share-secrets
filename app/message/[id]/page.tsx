@@ -1,7 +1,7 @@
 // app/message/[id]/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import homeStyles from '../../Home.module.css';
@@ -13,6 +13,11 @@ export default function MessagePage({ params }: { params: { id: string } }) {
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [retry, setRetry] = useState(false);
+
+  useEffect(() => {
+    // Remove the message ID from the URL immediately after the page loads
+    window.history.replaceState(null, '', '/#hidden');
+  }, []);
 
   const handleConfirm = async () => {
     try {

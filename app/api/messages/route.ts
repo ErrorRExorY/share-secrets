@@ -90,8 +90,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Nachricht abgelaufen' }, { status: 410 });
     }
 
-    if (storedPassword && (!password || decrypt(storedPassword) !== password)) {
-      return NextResponse.json({ error: 'Falsches Passwort' }, { status: 403 });
+    if (storedPassword) {
+      if (!password || decrypt(storedPassword) !== password) {
+        return NextResponse.json({ error: 'Falsches Passwort' }, { status: 403 });
+      }
+    } else {
+      if (password) {
+        return NextResponse.json({ error: 'Falsches Passwort' }, { status: 403 });
+      }
     }
 
     const message = decrypt(content);

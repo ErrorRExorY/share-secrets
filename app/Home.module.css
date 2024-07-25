@@ -75,3 +75,11 @@
 	text-decoration: underline;
   }
   
+  .memeContainer {
+	margin-top: 20px;
+  }
+  
+  .meme {
+	max-width: 100%;
+	height: auto;
+  }
