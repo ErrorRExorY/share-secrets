@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Importiere die CSS für die T
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "OneTime Message",
+  title: "Share Secrets",
   description: "Encrypted with Vault",
 };
 
