@@ -1,3 +1,4 @@
+// app/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +12,8 @@ export default function Home() {
   const [password, setPassword] = useState('');
   const [expiry, setExpiry] = useState('');
   const [link, setLink] = useState('');
-  
+  const [showOptions, setShowOptions] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -88,21 +90,36 @@ export default function Home() {
           onChange={(e) => setContent(e.target.value)}
           required
         ></textarea>
-        <input
-          className={styles.input}
-          type="password"
-          placeholder="Passwort (optional)"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          className={styles.input}
-          type="datetime-local"
-          placeholder="Ablaufzeit (optional)"
-          value={expiry}
-          onChange={(e) => setExpiry(e.target.value)}
-        />
-        <button className={styles.button} type="submit">Nachricht erstellen</button>
+        <div className={styles.optionsContainer}>
+          {showOptions && (
+            <>
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="Passwort (optional)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <input
+                className={styles.input}
+                type="datetime-local"
+                placeholder="Ablaufzeit (optional)"
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+              />
+            </>
+          )}
+        </div>
+        <div className={styles.buttonContainer}>
+          <button className={styles.button} type="submit">Nachricht erstellen</button>
+          <button 
+            className={styles.button} 
+            type="button" 
+            onClick={() => setShowOptions(!showOptions)}
+          >
+            Optionen {showOptions ? 'ausblenden' : 'einblenden'}
+          </button>
+        </div>
       </form>
       {link && (
         <div className={styles.linkContainer}>
@@ -110,7 +127,6 @@ export default function Home() {
           <a className={styles.link} href={link}>{link}</a>
         </div>
       )}
-      
     </div>
   );
 }
