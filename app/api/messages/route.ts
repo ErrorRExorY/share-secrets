@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import crypto from 'crypto';
+import validator from 'validator';
 
 const VAULT_ADDR = process.env.VAULT_ADDR as string;
 const VAULT_TOKEN = process.env.VAULT_TOKEN as string;
@@ -28,6 +29,19 @@ function decrypt(text: string): string {
 
 export async function POST(request: NextRequest) {
   const { content, password, expiry } = await request.json();
+  
+  if (!content || !validator.isLength(content, { min: 1, max: 2500 })) {
+    return NextResponse.json({ error: 'Ungültiger Inhalt' }, { status: 400 });
+  }
+  
+  if (password && !validator.isLength(password, { min: 6, max: 100 })) {
+    return NextResponse.json({ error: 'Ungültiges Passwort' }, { status: 400 });
+  }
+
+  if (expiry && !validator.isISO8601(expiry)) {
+    return NextResponse.json({ error: 'Ungültiges Ablaufdatum' }, { status: 400 });
+  }
+
   const encryptedContent = encrypt(content);
   const encryptedPassword = password ? encrypt(password) : null;
 
@@ -67,8 +81,9 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const messageId = searchParams.get('id');
   const password = searchParams.get('password');
-  if (!messageId) {
-    return NextResponse.json({ error: 'ID ist erforderlich' }, { status: 400 });
+  
+  if (!messageId || !validator.isUUID(messageId)) {
+    return NextResponse.json({ error: 'Ungültige ID' }, { status: 400 });
   }
 
   const messagePath = `secret/data/messages/${messageId}`;

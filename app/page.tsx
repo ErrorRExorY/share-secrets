@@ -89,6 +89,7 @@ export default function Home() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
+          placeholder="Nachricht (max. 2500 Zeichen)"
         ></textarea>
         <div className={styles.optionsContainer}>
           {showOptions && (
@@ -96,7 +97,7 @@ export default function Home() {
               <input
                 className={styles.input}
                 type="password"
-                placeholder="Passwort (optional)"
+                placeholder="Passwort (optional, min. 6, max. 100 Zeichen)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

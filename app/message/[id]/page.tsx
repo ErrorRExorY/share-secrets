@@ -69,6 +69,7 @@ export default function MessagePage({ params }: { params: { id: string } }) {
             placeholder="Passwort eingeben"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
           />
           <div className={homeStyles.buttonContainer}>
             <button className={homeStyles.button} onClick={handleConfirm}>Ja</button>
