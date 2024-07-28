@@ -128,6 +128,7 @@ export default function Home() {
           <a className={styles.link} href={link} target="_blank" rel="noopener noreferrer">{link}</a>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import homeStyles from '../Home.module.css';
 
 export default function NotFoundPage() {
@@ -32,7 +33,13 @@ export default function NotFoundPage() {
       </div>
       {randomMeme && (
         <div className={homeStyles.memeContainer}>
-          <img src={randomMeme} alt="Funny 404 Meme" className={homeStyles.meme} />
+          <Image 
+            src={randomMeme} 
+            alt="Funny 404 Meme" 
+            className={homeStyles.meme} 
+            width={500} // Set appropriate width and height
+            height={500} // Adjust based on your image size
+          />
         </div>
       )}
       <div className={homeStyles.footer}>
