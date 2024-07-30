@@ -3,8 +3,9 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../Home.module.css';
+import SessionProvider from '../components/SessionProvider';
 
-export default function AboutPage() {
+const AboutPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header />
@@ -27,3 +28,11 @@ export default function AboutPage() {
     </div>
   );
 }
+
+export default function Page() {
+  return (
+    <SessionProvider>
+      <AboutPage />
+    </SessionProvider>
+  );
+};

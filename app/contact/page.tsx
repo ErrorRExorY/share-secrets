@@ -6,8 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../Home.module.css';
+import SessionProvider from '../components/SessionProvider';
 
-export default function ContactPage() {
+const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -99,3 +100,11 @@ export default function ContactPage() {
     </div>
   );
 }
+
+export default function Page() {
+  return (
+    <SessionProvider>
+      <ContactPage />
+    </SessionProvider>
+  );
+};

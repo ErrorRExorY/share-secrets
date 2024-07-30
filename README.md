@@ -44,9 +44,15 @@ ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 
 3. Erstelle die Datei `.env` im Stammverzeichnis des Projekts und füge die erforderlichen Umgebungsvariablen hinzu:
     ```env
-    VAULT_ADDR="https://your-vault-server.com"
-    VAULT_TOKEN="s.yourVaultToken"
-    ENCRYPTION_KEY="your32characterlongencryptionkey"
+    VAULT_ADDR='http://127.0.0.1:8200'
+    VAULT_TOKEN='myroot'
+    ENCRYPTION_KEY='6f2b8c9d4a5b7e8c9f1e2d3b4a5c6e7f'
+    EMAIL_USER='something@gmail.com'
+    EMAIL_PASS='https://myaccount.google.com/apppasswords'
+    EMAIL_RECEIVER='whereyouwanttherequest@togo.com'
+    CSRF_SECRET='SOmeSecret'
+    NEXT_PUBLIC_BASE_URL='http://127.0.0.1'
+    NEXT_PUBLIC_DOMAIN='http://127.0.0.1'
     ```
 
 4. Starte die Entwicklungsversion der App:
@@ -66,7 +72,20 @@ ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 │   ├── message
 │   │   └── [id]
 │   │       └── page.tsx
+│   ├── privacy
+│   │   └── not-found.tsx
+│   │   └── page.tsx
+│   ├── terms
+│   │   └── not-found.tsx
+│   │   └── page.tsx
+│   ├── contact
+│   │   └── not-found.tsx
+│   │   └── page.tsx
+│   ├── dashboard
+│   │   └── Dashboard.module.css
+│   │   └── page.tsx
 │   ├── page.tsx
+│   ├── not-found.tsx
 │   ├── globals.css
 │   └── layout.tsx
 ├── components
@@ -74,6 +93,9 @@ ENCRYPTION_KEY="<32 Zeichen langer Schlüssel für AES-256>"
 │   ├── Header.module.css
 │   ├── Footer.tsx
 │   └── Footer.module.css
+├── lib
+│   ├── auth.ts
+│   └── mysql.ts
 ├── public
 │   └── favicon.ico
 ├── styles

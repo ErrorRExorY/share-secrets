@@ -3,8 +3,9 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from '../Home.module.css';
+import SessionProvider from '../components/SessionProvider';
 
-export default function TermsPage() {
+const TermsPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header />
@@ -26,3 +27,12 @@ export default function TermsPage() {
     </div>
   );
 }
+
+
+export default function Page() {
+  return (
+    <SessionProvider>
+      <TermsPage />
+    </SessionProvider>
+  );
+};

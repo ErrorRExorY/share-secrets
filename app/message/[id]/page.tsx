@@ -5,14 +5,17 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import homeStyles from '../../Home.module.css';
+import SessionProvider from '../../components/SessionProvider';
+import { useSession } from 'next-auth/react';
 
-export default function MessagePage({ params }: { params: { id: string } }) {
+const MessagePage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params;
   const [showConfirmation, setShowConfirmation] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [retry, setRetry] = useState(false);
+  //const { data: session, status } = useSession();
 
   useEffect(() => {
     // Remove the message ID from the URL immediately after the page loads
@@ -89,5 +92,13 @@ export default function MessagePage({ params }: { params: { id: string } }) {
       )}
       <Footer />
     </div>
+  );
+}
+
+export default function Page({ params }: { params: { id: string } }) {
+  return (
+    <SessionProvider>
+      <MessagePage params={params} />
+    </SessionProvider>
   );
 }

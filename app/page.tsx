@@ -6,13 +6,16 @@ import { toast } from 'react-toastify';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import styles from './Home.module.css';
+import SessionProvider from './components/SessionProvider';
+import { useSession } from 'next-auth/react';
 
-export default function Home() {
+const Home: React.FC = () => {
   const [content, setContent] = useState('');
   const [password, setPassword] = useState('');
   const [expiry, setExpiry] = useState('');
   const [link, setLink] = useState('');
   const [showOptions, setShowOptions] = useState(false);
+  const { data: session, status } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +73,14 @@ export default function Home() {
       });
     }
   };
+
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -132,3 +143,11 @@ export default function Home() {
     </div>
   );
 }
+
+export default function Page() {
+  return (
+    <SessionProvider>
+      <Home />
+    </SessionProvider>
+  );
+};

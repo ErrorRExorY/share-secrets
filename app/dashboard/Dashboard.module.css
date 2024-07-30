@@ -1,0 +1,39 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+  }
+  
+  .header {
+	background: #282c34;
+	padding: 20px;
+	color: white;
+  }
+  
+  .content {
+	flex: 1;
+	padding: 20px;
+  }
+  
+  .messageList {
+	list-style: none;
+	padding: 0;
+  }
+  
+  .messageItem {
+	display: flex;
+	justify-content: space-between;
+	background: #f9f9f9;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ddd;
+  }
+  
+  .deleteButton {
+	background: #ff4d4d;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	cursor: pointer;
+  }
+  
