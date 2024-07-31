@@ -1,13 +1,20 @@
+// app/api/messages/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import crypto from 'crypto';
 import validator from 'validator';
+import nodemailer from 'nodemailer';
 
 const VAULT_ADDR = process.env.VAULT_ADDR as string;
 const VAULT_TOKEN = process.env.VAULT_TOKEN as string;
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY as string;
 const IV_LENGTH = 16;
+const EMAIL_HOST = process.env.EMAIL_HOST as string;
+const EMAIL_PORT = parseInt(process.env.EMAIL_PORT as string);
+const EMAIL_USER = process.env.EMAIL_USER as string;
+const EMAIL_PASS = process.env.EMAIL_PASS as string;
 
 function encrypt(text: string): string {
   const iv = crypto.randomBytes(IV_LENGTH);
@@ -27,8 +34,32 @@ function decrypt(text: string): string {
   return decrypted.toString();
 }
 
+async function sendEmail(email: string, subject: string, text: string) {
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: EMAIL_USER,
+      pass: EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false, // This should be used only for development purposes
+    },
+  });
+  
+
+  await transporter.sendMail({
+    from: `"No Reply" <${EMAIL_USER}>`,
+    to: email,
+    subject: subject,
+    text: text,
+  });
+}
+
+
 export async function POST(request: NextRequest) {
-  const { content, password, expiry } = await request.json();
+  const { content, password, expiry, email } = await request.json();
   
   if (!content || !validator.isLength(content, { min: 1, max: 2500 })) {
     return NextResponse.json({ error: 'Ungültiger Inhalt' }, { status: 400 });
@@ -42,9 +73,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Ungültiges Ablaufdatum' }, { status: 400 });
   }
 
+  if (email && !validator.isEmail(email)) {
+    return NextResponse.json({ error: 'Ungültige E-Mail-Adresse' }, { status: 400 });
+  }
+
   const encryptedContent = encrypt(content);
   const encryptedPassword = password ? encrypt(password) : null;
-
   const messageId = uuidv4();
   const messagePath = `secret/data/messages/${messageId}`;
   const passwordPath = `secret/data/passwords/${messageId}`;
@@ -59,6 +93,7 @@ export async function POST(request: NextRequest) {
     data: {
       password: encryptedPassword,
       expiry: expiry ? new Date(expiry).toISOString() : null,
+      email: email || null, // E-Mail hinzufügen
     },
   };
 
@@ -99,7 +134,7 @@ export async function GET(request: NextRequest) {
     });
 
     const { content } = messageResponse.data.data.data;
-    const { password: storedPassword, expiry } = passwordResponse.data.data.data;
+    const { password: storedPassword, expiry, email } = passwordResponse.data.data.data;
 
     if (expiry && new Date() > new Date(expiry)) {
       return NextResponse.json({ error: 'Nachricht abgelaufen' }, { status: 410 });
@@ -125,8 +160,16 @@ export async function GET(request: NextRequest) {
       headers: { 'X-Vault-Token': VAULT_TOKEN },
     });
 
+    
+
+    // E-Mail-Benachrichtigung senden, falls eine E-Mail angegeben ist
+    if (email) {
+      await sendEmail(email, 'Ihre Nachricht wurde angesehen und gelöscht', 'Ihre einmalige Nachricht wurde angesehen und gelöscht.');
+    }
+
     return NextResponse.json({ content: message });
   } catch (error) {
+    //console.error('Fehler beim Abrufen der Nachricht:', error);
     return NextResponse.json({ error: 'Nachricht nicht gefunden oder bereits angesehen' }, { status: 404 });
   }
 }

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import homeStyles from '../../Home.module.css';
+import loaderStyles from './Loader.module.css'; // Importiere die Loader-Styles
 import SessionProvider from '../../components/SessionProvider';
 import { useSession } from 'next-auth/react';
 
@@ -15,6 +16,7 @@ const MessagePage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [retry, setRetry] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   //const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -23,6 +25,7 @@ const MessagePage: React.FC<{ params: { id: string } }> = ({ params }) => {
   }, []);
 
   const handleConfirm = async () => {
+    setIsFetching(true); // Set fetching to true when request starts
     try {
       // Reset error before new request
       setError(null);
@@ -42,6 +45,8 @@ const MessagePage: React.FC<{ params: { id: string } }> = ({ params }) => {
     } catch {
       setError('Fehler beim Abrufen der Nachricht.');
       setRetry(true); // Allow retry on error
+    } finally {
+      setIsFetching(false); // Set fetching to false when request completes
     }
   };
 
@@ -73,14 +78,22 @@ const MessagePage: React.FC<{ params: { id: string } }> = ({ params }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
+            disabled={isFetching}
           />
           <div className={homeStyles.buttonContainer}>
-            <button className={homeStyles.button} onClick={handleConfirm}>Ja</button>
-            <button className={homeStyles.button} onClick={handleDecline}>Nein</button>
+            <button className={homeStyles.button} onClick={handleConfirm} disabled={isFetching}>
+              Ja
+            </button>
+            <button className={homeStyles.button} onClick={handleDecline} disabled={isFetching}>
+              Nein
+            </button>
           </div>
+          {isFetching && (
+            <div className={loaderStyles.loader}></div> // Ladeanimation
+          )}
           {retry && (
             <div className={homeStyles.retryContainer}>
-              <button className={homeStyles.retryButton} onClick={handleRetry}>Erneut versuchen</button>
+              <button className={homeStyles.retryButton} onClick={handleRetry} disabled={isFetching}>Erneut versuchen</button>
             </div>
           )}
           {error && <p className={homeStyles.error}>{error}</p>}

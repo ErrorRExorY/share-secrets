@@ -1,0 +1,20 @@
+{
+	"title": "Einmal-Nachrichten-System",
+	"description": "Erstellen Sie eine Nachricht, die nach einmaligem Lesen zerstört wird.",
+	"options": "Optionen",
+	"passwordProtection": "Passwortschutz für zusätzliche Sicherheit",
+	"expiryTime": "Ablaufzeit für zeitlich begrenzte Nachrichten",
+	"messagePlaceholder": "Nachricht (max. 2500 Zeichen)",
+	"passwordPlaceholder": "Passwort (optional, min. 6, max. 100 Zeichen)",
+	"expiryPlaceholder": "Ablaufzeit (optional)",
+	"emailPlaceholder": "E-Mail-Adresse (optional)",
+	"useSessionEmail": "E-Mail nutzen",
+	"createMessage": "Nachricht erstellen",
+	"show": "einblenden",
+	"hide": "ausblenden",
+	"oneTimeLink": "Einmaliger Link",
+	"linkCopied": "Der Link wurde in die Zwischenablage kopiert!",
+	"linkCopyError": "Fehler beim Kopieren des Links in die Zwischenablage.",
+	"messageCreateError": "Fehler beim Erstellen der Nachricht."
+  }
+  

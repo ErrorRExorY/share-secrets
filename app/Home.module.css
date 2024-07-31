@@ -84,3 +84,20 @@
     max-width: 100%;
     height: auto;
 }
+
+.emailContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    color: #e0e0e0;
+    cursor: pointer;
+  }
+  
+  .checkboxLabel input {
+    margin-right: 5px;
+  }

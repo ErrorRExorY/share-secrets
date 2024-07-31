@@ -14,6 +14,9 @@ export default function NotFoundPage() {
     '/images/5.png',
     '/images/6.jpg',
     '/images/7.jpeg',
+    '/images/8.jpg',
+    '/images/9.webp',
+    '/images/10.webp',
   ];
 
   const [randomMeme, setRandomMeme] = useState<string>('');

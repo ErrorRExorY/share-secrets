@@ -1,7 +1,7 @@
 // app/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -13,9 +13,19 @@ const Home: React.FC = () => {
   const [content, setContent] = useState('');
   const [password, setPassword] = useState('');
   const [expiry, setExpiry] = useState('');
+  const [email, setEmail] = useState(''); // Neuer State für die E-Mail
+  const [useSessionEmail, setUseSessionEmail] = useState(false); // State für das Kontrollkästchen
   const [link, setLink] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (useSessionEmail && session?.user?.email) {
+      setEmail(session.user.email);
+    } else if (!useSessionEmail) {
+      setEmail('');
+    }
+  }, [useSessionEmail, session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +35,7 @@ const Home: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content, password, expiry }),
+        body: JSON.stringify({ content, password, expiry, email }), // E-Mail hinzufügen
       });
 
       if (!response.ok) {
@@ -61,6 +71,8 @@ const Home: React.FC = () => {
       setContent('');
       setPassword('');
       setExpiry('');
+      setEmail(''); // E-Mail-Feld zurücksetzen
+      setUseSessionEmail(false); // Kontrollkästchen zurücksetzen
     } catch (error) {
       toast.error('Fehler beim Erstellen der Nachricht.', {
         position: 'top-right',
@@ -119,6 +131,26 @@ const Home: React.FC = () => {
                 value={expiry}
                 onChange={(e) => setExpiry(e.target.value)}
               />
+              <div className={styles.emailContainer}>
+                <input
+                  className={styles.input}
+                  type="email"
+                  placeholder="E-Mail-Adresse (optional)"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={useSessionEmail}
+                />
+                {session && (
+                  <label className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      checked={useSessionEmail}
+                      onChange={() => setUseSessionEmail(!useSessionEmail)}
+                    />
+                    E-Mail nutzen
+                  </label>
+                )}
+              </div>
             </>
           )}
         </div>

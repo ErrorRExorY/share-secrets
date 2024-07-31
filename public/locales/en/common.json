@@ -1,0 +1,20 @@
+{
+	"title": "One-Time Message System",
+	"description": "Create a message that will be destroyed after a single reading.",
+	"options": "Options",
+	"passwordProtection": "Password protection for added security",
+	"expiryTime": "Expiry time for time-limited messages",
+	"messagePlaceholder": "Message (max. 2500 characters)",
+	"passwordPlaceholder": "Password (optional, min. 6, max. 100 characters)",
+	"expiryPlaceholder": "Expiry time (optional)",
+	"emailPlaceholder": "Email address (optional)",
+	"useSessionEmail": "Use email",
+	"createMessage": "Create Message",
+	"show": "show",
+	"hide": "hide",
+	"oneTimeLink": "One-time link",
+	"linkCopied": "The link has been copied to the clipboard!",
+	"linkCopyError": "Error copying the link to the clipboard.",
+	"messageCreateError": "Error creating the message."
+  }
+  
