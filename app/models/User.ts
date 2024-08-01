@@ -31,3 +31,8 @@ export async function getUserById(userId: string): Promise<User | null> {
   const [rows] = await connection.execute<RowDataPacket[]>('SELECT * FROM users WHERE id = ?', [userId]);
   return rows[0] as User | null;
 }
+
+export async function updatePassword(userId: number, newPassword: string): Promise<void> {
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await connection.execute('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId]);
+}

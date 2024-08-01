@@ -1,3 +1,4 @@
+// app/auth/page.tsx
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
@@ -10,9 +11,11 @@ const SignIn = () => {
   const [email, setEmail] = useState<string>('');
   const { data: session, status } = useSession();
   const [password, setPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>(''); // Add username state
+  const [username, setUsername] = useState<string>('');
   const [isRegister, setIsRegister] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
+  const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
   
   useEffect(() => {
@@ -23,9 +26,18 @@ const SignIn = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isForgotPassword) {
+      try {
+        await axios.post('/api/auth/forgot-password', { email });
+        setMessage('A password reset link has been sent to your email');
+      } catch (err) {
+        setError('An unexpected error occurred');
+      }
+      return;
+    }
+
     try {
       if (isRegister) {
-        // Registration
         await axios.post('/api/register', { email, password, username });
       }
       const res = await signIn('credentials', { email, password, redirect: false });
@@ -42,15 +54,16 @@ const SignIn = () => {
   };
 
   return (
-    <div className="signin-container">
-      <form onSubmit={handleSubmit}>
-        {isRegister && (
+    <div className="flex items-center justify-center h-screen bg-gray-800">
+      <form onSubmit={handleSubmit} className="flex flex-col bg-gray-900 p-8 rounded-lg">
+        {!isForgotPassword && isRegister && (
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
             required
+            className="mb-4 p-2 rounded bg-gray-700 text-white placeholder-gray-400"
           />
         )}
         <input
@@ -59,54 +72,40 @@ const SignIn = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
+          className="mb-4 p-2 rounded bg-gray-700 text-white placeholder-gray-400"
         />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit">{isRegister ? 'Register' : 'Sign In'}</button>
-        <button type="button" onClick={() => setIsRegister(!isRegister)}>
-          {isRegister ? 'Already have an account? Sign In' : 'New user? Register'}
+        {!isForgotPassword && (
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+            className="mb-4 p-2 rounded bg-gray-700 text-white placeholder-gray-400"
+          />
+        )}
+        <button type="submit" className="p-2 rounded bg-blue-600 text-white mb-2">
+          {isForgotPassword ? 'Reset Password' : isRegister ? 'Register' : 'Sign In'}
         </button>
-        {error && <p className="error">{error}</p>}
+        {!isForgotPassword && (
+          <button 
+            type="button" 
+            onClick={() => setIsRegister(!isRegister)} 
+            className="p-2 rounded bg-gray-700 text-white mb-2"
+          >
+            {isRegister ? 'Already have an account? Sign In' : 'New user? Register'}
+          </button>
+        )}
+        <button 
+          type="button" 
+          onClick={() => setIsForgotPassword(!isForgotPassword)} 
+          className="p-2 rounded bg-gray-700 text-white mb-2"
+        >
+          {isForgotPassword ? 'Remembered your password? Sign In' : 'Forgot your password?'}
+        </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {message && <p className="text-green-500 mt-2">{message}</p>}
       </form>
-      <style jsx>{`
-        .signin-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background-color: #2c2f33;
-        }
-        form {
-          display: flex;
-          flex-direction: column;
-          background-color: #23272a;
-          padding: 2rem;
-          border-radius: 8px;
-        }
-        input {
-          margin-bottom: 1rem;
-          padding: 0.5rem;
-          border-radius: 4px;
-          border: none;
-        }
-        button {
-          padding: 0.5rem;
-          border-radius: 4px;
-          background-color: #7289da;
-          color: white;
-          border: none;
-          margin-bottom: 0.5rem;
-        }
-        .error {
-          color: red;
-          margin-top: 0.5rem;
-        }
-      `}</style>
     </div>
   );
 };
