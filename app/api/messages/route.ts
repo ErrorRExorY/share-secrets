@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ id: messageId });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Fehler beim Speichern der Nachricht' }, { status: 500 });
   }
 }

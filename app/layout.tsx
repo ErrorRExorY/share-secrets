@@ -31,6 +31,7 @@ export default function RootLayout({
           pauseOnFocusLoss
           theme="dark" // Verwende das dunkle Theme für Toasts
         />
+        <script defer src="https://analytics.whywaitservices.de/pixel/JwYugqyAfR0I46r6"></script>
       </body>
     </html>
   );
